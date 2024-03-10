@@ -9,6 +9,10 @@ import com.openclassrooms.chatpoc.security.JwtTokenProvider;
 import com.openclassrooms.chatpoc.service.UserService;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -95,6 +99,28 @@ public class UserController {
         // Retourne une réponse 400 s'il y a une erreur lors de l'ajout
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
+}
+
+@GetMapping("/me")
+  public ResponseEntity<User> getUserInfo() {
+    // Récupère l'objet Authentication
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+    if (authentication != null) {
+        // Récupère l'identifiant de l'objet Authentication
+        String email = authentication.getName();
+
+        // Appelle la méthode du service pour récupérer les informations de l'utilisateur
+        User user = userService.getUserByEmail(email);
+
+        if (user != null) {
+            // Renvoie les informations de l'utilisateur dans la réponse
+            return ResponseEntity.ok(user);
+        }
+    }
+
+    // Renvoie une erreur 401 Unauthorized si l'authentification n'est pas fournie
+    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 }
 
 

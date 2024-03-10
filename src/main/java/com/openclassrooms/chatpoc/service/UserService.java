@@ -20,6 +20,8 @@ import org.springframework.stereotype.Service;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -41,7 +43,8 @@ public class UserService implements UserDetailsService {
         if (user == null) {
             throw new UsernameNotFoundException("Utilisateur non trouvé : " + email);
         }
-        return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), new ArrayList<>());
+        return new org.springframework.security.core.userdetails.User(
+                user.getEmail(), user.getPassword(), user.getAuthorities());
     }
 
     public User getUserByEmail(String email) {
@@ -81,6 +84,9 @@ public class UserService implements UserDetailsService {
         user.setPassword(passwordEncoder.encode(password));
         user.setBirthdate(birthdate);
         user.setAddress(address);
+
+        List<String> roles = Arrays.asList("ROLE_USER"); // Vous pouvez ajouter d'autres rôles au besoin
+        user.setRoles(roles);
 
 
         // Enregistrez l'utilisateur dans le référentiel (repository)

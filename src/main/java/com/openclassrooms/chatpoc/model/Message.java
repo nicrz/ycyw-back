@@ -1,6 +1,5 @@
 package com.openclassrooms.chatpoc.model;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
@@ -8,6 +7,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
@@ -22,14 +22,11 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
-import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.sql.Timestamp;
-import java.util.List;
 
 @Entity
-@Table(name = "chat")
+@Table(name = "message")
 @EntityListeners(AuditingEntityListener.class)
 @Data
 @Accessors(chain = true)
@@ -38,25 +35,23 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class Chat {
+public class Message {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Getter @Setter private Integer id;
 
-  @Size(max = 100)
+  @Size(max = 2000)
   @Column(nullable = false)
-  @Getter @Setter private String subject;
+  @Getter @Setter private String content;
 
   @OneToOne
-  @JoinColumn(name = "creator", referencedColumnName = "id")
-  @Getter @Setter private User creator;
+  @JoinColumn(name = "sender", referencedColumnName = "id")
+  @Getter @Setter private User sender;
 
-  @CreatedDate
-  @Column(name = "created_at", updatable = false)
-  @Getter @Setter private Timestamp created_at;
-
-  @OneToMany(mappedBy = "chat", cascade = CascadeType.ALL)
-  @Getter @Setter private List<Message> messages;
+  @ManyToOne
+  @JoinColumn(name = "chat_id", nullable = false)
+  @Getter @Setter private Chat chat;
 
 }
+
