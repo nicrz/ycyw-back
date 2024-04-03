@@ -68,7 +68,7 @@ public class ChatController {
         }
     }
 
-    @GetMapping("/list")
+    @GetMapping(path = "/list")
     public ResponseEntity<ChatsResponse> getAllChats() {
 
         Iterable<Chat> chatsIterable = chatService.findAll();
