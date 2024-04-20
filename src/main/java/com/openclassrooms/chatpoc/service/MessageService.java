@@ -53,6 +53,7 @@ public class MessageService {
         String email = authentication.getName();
         User user = userRepository.findByEmail(email);
         newMessage.setSender(user);
+        newMessage.setSenderName(user.getFirstname() + ' ' + user.getLastname());
 
         // Récupère l'ID du chat depuis la requête
         Integer chatId = messageRequest.getChat();

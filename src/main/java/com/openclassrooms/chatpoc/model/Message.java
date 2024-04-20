@@ -24,6 +24,9 @@ import lombok.experimental.Accessors;
 
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 
 @Entity
 @Table(name = "message")
@@ -35,6 +38,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
+
 public class Message {
 
   @Id
@@ -45,12 +49,15 @@ public class Message {
   @Column(nullable = false)
   @Getter @Setter private String content;
 
-  @OneToOne
+  @ManyToOne
   @JoinColumn(name = "sender", referencedColumnName = "id")
   @Getter @Setter private User sender;
 
+  @Column
+  private String senderName;
+
   @ManyToOne
-  @JoinColumn(name = "chat_id", nullable = false)
+  @JoinColumn(name = "chat_id", referencedColumnName = "id")
   @Getter @Setter private Chat chat;
 
 }
